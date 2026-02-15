@@ -3,7 +3,7 @@ import { BentoCard } from "./bento-card";
 const links = [
   { label: "GitHub", href: "https://github.com/jedymatt" },
   { label: "LinkedIn", href: "https://linkedin.com/in/jedymatt" },
-  { label: "Email", href: "mailto:jedymatttabasco@gmail.com" },
+  { label: "Email", href: "mailto:hello@jedymatt.dev" },
 ];
 
 export function ContactCard() {
