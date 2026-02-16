@@ -13,17 +13,23 @@ const technologies = [
   "Vue",
 ];
 
-export function TechCard() {
+interface TechCardProps {
+  style?: React.CSSProperties;
+}
+
+export function TechCard({ style }: TechCardProps) {
   return (
-    <BentoCard>
-      <h2 className="text-sm font-medium text-neutral-400">Tech Stack</h2>
-      <div className="mt-3 flex flex-wrap gap-2">
+    <BentoCard className="animate-fade-in-up" style={style}>
+      <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">
+        // stack
+      </p>
+      <div className="mt-3 flex flex-col gap-1">
         {technologies.map((tech) => (
           <span
             key={tech}
-            className="rounded-lg bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-200"
+            className="font-[family-name:var(--font-mono)] text-xs text-[var(--text-primary)]"
           >
-            {tech}
+            <span className="text-[var(--text-accent)]">&gt;</span> {tech}
           </span>
         ))}
       </div>

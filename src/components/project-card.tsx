@@ -6,55 +6,63 @@ interface ProjectCardProps {
   project: FeaturedProject;
   repo?: GitHubRepo;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export function ProjectCard({ project, repo, className }: ProjectCardProps) {
+export function ProjectCard({
+  project,
+  repo,
+  className,
+  style,
+}: ProjectCardProps) {
   return (
-    <BentoCard className={`flex flex-col justify-between ${className ?? ""}`}>
+    <BentoCard
+      className={`animate-fade-in-up flex flex-col justify-between ${className ?? ""}`}
+      style={style}
+    >
       <div>
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-white">{project.title}</h2>
-          {repo && (
-            <span className="text-xs text-neutral-500">
-              {repo.stargazers_count} stars
+        <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">
+          // project
+        </p>
+        <div className="mt-2 flex items-baseline justify-between">
+          <h2 className="font-[family-name:var(--font-mono)] text-sm font-bold text-white">
+            {project.title}
+          </h2>
+          {repo && repo.stargazers_count > 0 && (
+            <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--text-secondary)]">
+              ★ {repo.stargazers_count}
             </span>
           )}
         </div>
-        <p className="mt-2 text-sm leading-relaxed text-neutral-400">
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[var(--text-secondary)]">
           {project.description}
         </p>
+        <p className="mt-2 font-[family-name:var(--font-mono)] text-xs text-[var(--text-secondary)]">
+          {project.tags.join(" · ")}
+        </p>
       </div>
-      <div className="mt-4 flex items-center justify-between">
-        <div className="flex flex-wrap gap-1.5">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-400"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        <div className="flex gap-3">
+      <div className="mt-4 flex gap-4">
+        <a
+          href={
+            repo?.html_url ??
+            `https://github.com/jedymatt/${project.repoName}`
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-[family-name:var(--font-mono)] text-xs text-[var(--text-accent)] transition-transform hover:translate-x-0.5"
+        >
+          code →
+        </a>
+        {project.liveUrl && (
           <a
-            href={repo?.html_url ?? `https://github.com/jedymatt/${project.repoName}`}
+            href={project.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-neutral-400 underline-offset-2 hover:text-white hover:underline"
+            className="font-[family-name:var(--font-mono)] text-xs text-[var(--text-accent)] transition-transform hover:translate-x-0.5"
           >
-            Code
+            live →
           </a>
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-neutral-400 underline-offset-2 hover:text-white hover:underline"
-            >
-              Live
-            </a>
-          )}
-        </div>
+        )}
       </div>
     </BentoCard>
   );
