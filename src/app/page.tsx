@@ -12,7 +12,7 @@ export default async function Home() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 gap-[3px] sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[200px_180px_180px]">
+      <div className="grid grid-cols-1 gap-[3px] sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[minmax(200px,auto)_minmax(180px,auto)_minmax(180px,auto)]">
         <HeroCard style={{ animationDelay: "0ms" }} />
         <StatsCard stats={stats} style={{ animationDelay: "80ms" }} />
 
