@@ -17,6 +17,15 @@ export const featuredProjects: FeaturedProject[] = [
     tags: ["Flutter", "Dart", "Mobile"],
   },
   {
+    slug: "mystery-fruits-js",
+    title: "Mystery Fruits",
+    description:
+      "A guessing game where you figure out 3 fruits in the correct order within 6 attempts.",
+    repoName: "mystery-fruits-js",
+    liveUrl: "https://mfjs.jedymatt.dev/",
+    tags: ["Vue 3", "JavaScript", "Mini Game"],
+  },
+  {
     slug: "remindmebills",
     title: "RemindMeBills",
     description:
