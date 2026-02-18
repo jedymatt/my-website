@@ -7,13 +7,14 @@ const links = [
 ];
 
 interface ContactCardProps {
+  className?: string;
   style?: React.CSSProperties;
 }
 
-export function ContactCard({ style }: ContactCardProps) {
+export function ContactCard({ className, style }: ContactCardProps) {
   return (
     <BentoCard
-      className="animate-fade-in-up flex flex-col justify-between"
+      className={`animate-fade-in-up flex flex-col justify-between ${className ?? ""}`}
       style={style}
     >
       <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">

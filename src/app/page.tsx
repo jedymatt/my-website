@@ -27,14 +27,21 @@ export default async function Home() {
         />
 
         <ProjectCard
-          project={featuredProjects[1]}
+          project={featuredProjects[2]}
           repo={stats.repos.find(
-            (r) => r.name === featuredProjects[1].repoName
+            (r) => r.name === featuredProjects[2].repoName
           )}
           className="sm:col-span-2"
           style={{ animationDelay: "400ms" }}
         />
-        <ContactCard style={{ animationDelay: "480ms" }} />
+        <ProjectCard
+          project={featuredProjects[1]}
+          repo={stats.repos.find(
+            (r) => r.name === featuredProjects[1].repoName
+          )}
+          style={{ animationDelay: "480ms" }}
+        />
+        <ContactCard style={{ animationDelay: "560ms" }} />
       </div>
     </main>
   );
