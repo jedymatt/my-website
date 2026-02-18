@@ -1,5 +1,6 @@
 import { FeaturedProject } from "@/lib/projects";
 import { GitHubRepo } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { BentoCard } from "./bento-card";
 
 interface ProjectCardProps {
@@ -17,7 +18,7 @@ export function ProjectCard({
 }: ProjectCardProps) {
   return (
     <BentoCard
-      className={`animate-fade-in-up flex flex-col justify-between ${className ?? ""}`}
+      className={cn("animate-fade-in-up flex flex-col justify-between", className)}
       style={style}
     >
       <div>

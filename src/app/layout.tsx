@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Outfit } from "next/font/google";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -26,7 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${jetbrainsMono.variable} ${outfit.variable} font-[family-name:var(--font-sans)] antialiased`}
+        className={cn(
+          jetbrainsMono.variable,
+          outfit.variable,
+          "font-[family-name:var(--font-sans)] antialiased"
+        )}
       >
         {children}
       </body>
