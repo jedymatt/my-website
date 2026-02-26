@@ -8,7 +8,7 @@ export function AboutCard({ style }: AboutCardProps) {
   return (
     <BentoCard className="animate-fade-in-up" style={style}>
       <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">
-        // about
+        {"// about"}
       </p>
       <p className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]">
         I&apos;m a software engineer from the Philippines who loves building

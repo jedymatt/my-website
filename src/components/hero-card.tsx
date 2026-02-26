@@ -12,7 +12,7 @@ export function HeroCard({ style }: HeroCardProps) {
     >
       <div>
         <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">
-          // hello world
+          {"// hello world"}
         </p>
         <h1 className="mt-3 font-[family-name:var(--font-mono)] text-4xl font-bold uppercase tracking-tight text-white sm:text-5xl">
           Jedy Matt Tabasco

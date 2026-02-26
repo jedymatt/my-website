@@ -19,7 +19,7 @@ export function ContactCard({ className, style }: ContactCardProps) {
       style={style}
     >
       <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">
-        // contact
+        {"// contact"}
       </p>
       <ul className="mt-3 space-y-1.5">
         {links.map((link) => (

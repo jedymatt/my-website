@@ -57,3 +57,23 @@ body {
 .animate-blink {
   animation: blink 1s steps(1) infinite;
 }
+
+/* Game loading bar animation */
+@keyframes loading-bar {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.loading-bar {
+  animation: loading-bar 2s ease-out forwards;
+}
+
+/* Game interaction prompt pulse */
+@keyframes interact-pulse {
+  0%, 100% { border-color: #b8ff00; }
+  50% { border-color: #b8ff0060; }
+}
+
+.game-interact-prompt {
+  animation: interact-pulse 1.5s ease-in-out infinite;
+}

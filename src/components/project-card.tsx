@@ -23,7 +23,7 @@ export function ProjectCard({
     >
       <div>
         <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">
-          // project
+          {"// project"}
         </p>
         <div className="mt-2 flex items-baseline justify-between">
           <h2 className="font-[family-name:var(--font-mono)] text-sm font-bold text-white">

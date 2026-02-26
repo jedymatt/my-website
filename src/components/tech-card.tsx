@@ -21,7 +21,7 @@ export function TechCard({ style }: TechCardProps) {
   return (
     <BentoCard className="animate-fade-in-up" style={style}>
       <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">
-        // stack
+        {"// stack"}
       </p>
       <div className="mt-3 flex flex-col gap-1">
         {technologies.map((tech) => (

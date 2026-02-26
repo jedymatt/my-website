@@ -20,7 +20,7 @@ export function StatsCard({ stats, style }: StatsCardProps) {
     >
       <div>
         <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[var(--text-accent)]">
-          // stats
+          {"// stats"}
         </p>
         <div className="mt-4 space-y-2">
           {statItems.map((item) => (
