@@ -30,18 +30,11 @@ export function HUD({ nearTerminal, isPanelOpen, isMobile }: HUDProps) {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-10">
-      {/* Crosshair - desktop only */}
-      {!isMobile && (
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="h-1 w-1 rounded-full bg-[var(--accent)] opacity-70" />
-        </div>
-      )}
-
       {/* Click to start prompt - desktop only */}
       {!isMobile && (
         <div className="absolute left-1/2 top-[35%] -translate-x-1/2 text-center">
           <p className="font-[family-name:var(--font-mono)] text-sm text-[var(--text-secondary)] opacity-60">
-            click to look around
+            click to orbit camera
           </p>
         </div>
       )}
@@ -73,7 +66,7 @@ export function HUD({ nearTerminal, isPanelOpen, isMobile }: HUDProps) {
         </div>
       )}
 
-      {/* Controls hint */}
+      {/* Controls hint - desktop */}
       <div
         className={`absolute bottom-6 left-6 transition-opacity duration-500 ${
           showControls ? "opacity-100" : "opacity-0 hover:opacity-100"
@@ -86,13 +79,10 @@ export function HUD({ nearTerminal, isPanelOpen, isMobile }: HUDProps) {
             <span className="text-[var(--accent)]">WASD</span> move
           </p>
           <p className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--text-secondary)]">
-            <span className="text-[var(--accent)]">MOUSE</span> look
+            <span className="text-[var(--accent)]">MOUSE</span> orbit
           </p>
           <p className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--text-secondary)]">
             <span className="text-[var(--accent)]">E</span> interact
-          </p>
-          <p className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--text-secondary)]">
-            <span className="text-[var(--accent)]">ESC</span> release cursor
           </p>
         </div>
       </div>
@@ -109,7 +99,7 @@ export function HUD({ nearTerminal, isPanelOpen, isMobile }: HUDProps) {
               <span className="text-[var(--accent)]">LEFT</span> joystick: move
             </p>
             <p className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--text-secondary)]">
-              <span className="text-[var(--accent)]">RIGHT</span> swipe: look
+              <span className="text-[var(--accent)]">RIGHT</span> swipe: orbit
             </p>
           </div>
         </div>

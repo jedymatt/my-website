@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -14,6 +14,7 @@ interface InteractiveTerminalProps {
   rotation?: [number, number, number];
   onProximity: (id: TerminalId | null) => void;
   activeTerminal: TerminalId | null;
+  playerRef: React.RefObject<THREE.Group | null>;
 }
 
 const INTERACT_DISTANCE = 4;
@@ -25,10 +26,10 @@ export function InteractiveTerminal({
   rotation = [0, 0, 0],
   onProximity,
   activeTerminal,
+  playerRef,
 }: InteractiveTerminalProps) {
   const groupRef = useRef<THREE.Group>(null);
   const screenRef = useRef<THREE.Mesh>(null);
-  const { camera } = useThree();
   const [isNear, setIsNear] = useState(false);
   const wasNearRef = useRef(false);
 
@@ -39,9 +40,16 @@ export function InteractiveTerminal({
     groupRef.current.position.y =
       position[1] + Math.sin(clock.elapsedTime * 0.8 + position[0]) * 0.05;
 
-    // Check proximity to camera
-    const terminalPos = new THREE.Vector3(...position);
-    const dist = camera.position.distanceTo(terminalPos);
+    // Check proximity to player (not camera, since we're in 3rd person)
+    const terminalPos = new THREE.Vector3(position[0], 0, position[2]);
+    const playerPos = playerRef.current
+      ? new THREE.Vector3(
+          playerRef.current.position.x,
+          0,
+          playerRef.current.position.z
+        )
+      : new THREE.Vector3(0, 0, 0);
+    const dist = playerPos.distanceTo(terminalPos);
     const isNow = dist < INTERACT_DISTANCE;
 
     if (isNow !== wasNearRef.current) {

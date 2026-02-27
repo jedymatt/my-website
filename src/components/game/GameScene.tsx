@@ -4,11 +4,13 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { CyberpunkWorld } from "./CyberpunkWorld";
 import { PlayerController } from "./PlayerController";
+import { PlayerCharacter } from "./PlayerCharacter";
 import { InteractiveTerminal, TerminalId } from "./InteractiveTerminal";
 import { HUD } from "./HUD";
 import { InfoPanel } from "./InfoPanel";
 import { TouchControls } from "./TouchControls";
 import type { GitHubStats } from "@/lib/types";
+import type * as THREE from "three";
 
 interface GameSceneProps {
   stats: GitHubStats;
@@ -31,16 +33,25 @@ export default function GameScene({ stats }: GameSceneProps) {
   const [nearTerminal, setNearTerminal] = useState<TerminalId | null>(null);
   const [openPanel, setOpenPanel] = useState<TerminalId | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isPortrait, setIsPortrait] = useState(false);
   const touchMoveRef = useRef({ x: 0, y: 0 });
   const touchLookRef = useRef({ dx: 0, dy: 0 });
+  const playerRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile("ontouchstart" in window && window.innerWidth < 1024);
+    const check = () => {
+      const hasTouchScreen = "ontouchstart" in window;
+      const narrow = window.innerWidth < 1024;
+      setIsMobile(hasTouchScreen && narrow);
+      setIsPortrait(hasTouchScreen && window.innerHeight > window.innerWidth);
     };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    check();
+    window.addEventListener("resize", check);
+    window.addEventListener("orientationchange", check);
+    return () => {
+      window.removeEventListener("resize", check);
+      window.removeEventListener("orientationchange", check);
+    };
   }, []);
 
   const handleProximity = useCallback((id: TerminalId | null) => {
@@ -78,23 +89,42 @@ export default function GameScene({ stats }: GameSceneProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [nearTerminal, openPanel, handleInteract]);
 
+  // Landscape-only overlay for mobile portrait
+  if (isMobile && isPortrait) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg-deep)]">
+        <div className="rotate-landscape-icon mb-6 text-5xl text-[var(--accent)]">
+          ⟳
+        </div>
+        <p className="font-[family-name:var(--font-mono)] text-sm font-bold text-white">
+          Rotate your device
+        </p>
+        <p className="mt-2 max-w-xs text-center font-[family-name:var(--font-mono)] text-xs text-[var(--text-secondary)]">
+          This experience is best in landscape mode. Please rotate your phone sideways.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 touch-none">
       <Canvas
         camera={{
-          fov: 75,
+          fov: 60,
           near: 0.1,
           far: 200,
-          position: [0, 1.6, 8],
+          position: [0, 4, 14],
         }}
         gl={{ antialias: true, alpha: false }}
         style={{ background: "#0a0a0c" }}
       >
         <CyberpunkWorld />
+        <PlayerCharacter playerRef={playerRef} />
         <PlayerController
           isPanelOpen={openPanel !== null}
           touchMoveRef={touchMoveRef}
           touchLookRef={touchLookRef}
+          playerRef={playerRef}
         />
         {TERMINALS.map((t) => (
           <InteractiveTerminal
@@ -105,6 +135,7 @@ export default function GameScene({ stats }: GameSceneProps) {
             rotation={t.rotation}
             onProximity={handleProximity}
             activeTerminal={nearTerminal}
+            playerRef={playerRef}
           />
         ))}
       </Canvas>
