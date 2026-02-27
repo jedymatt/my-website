@@ -88,8 +88,6 @@ export function InteractiveTerminal({
         color="#b8ff00"
         anchorX="center"
         anchorY="middle"
-        font="/fonts/JetBrainsMono-Regular.ttf"
-        characters="abcdefghijklmnopqrstuvwxyz/_0123456789"
       >
         {label}
       </Text>

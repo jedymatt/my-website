@@ -7,6 +7,7 @@ import type { TerminalId } from "./InteractiveTerminal";
 interface HUDProps {
   nearTerminal: TerminalId | null;
   isPanelOpen: boolean;
+  isMobile: boolean;
 }
 
 const TERMINAL_LABELS: Record<TerminalId, string> = {
@@ -17,7 +18,7 @@ const TERMINAL_LABELS: Record<TerminalId, string> = {
   stats: "stats",
 };
 
-export function HUD({ nearTerminal, isPanelOpen }: HUDProps) {
+export function HUD({ nearTerminal, isPanelOpen, isMobile }: HUDProps) {
   const [showControls, setShowControls] = useState(true);
 
   useEffect(() => {
@@ -29,20 +30,24 @@ export function HUD({ nearTerminal, isPanelOpen }: HUDProps) {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-10">
-      {/* Crosshair */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <div className="h-1 w-1 rounded-full bg-[var(--accent)] opacity-70" />
-      </div>
+      {/* Crosshair - desktop only */}
+      {!isMobile && (
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="h-1 w-1 rounded-full bg-[var(--accent)] opacity-70" />
+        </div>
+      )}
 
-      {/* Click to start prompt */}
-      <div className="absolute left-1/2 top-[35%] -translate-x-1/2 text-center">
-        <p className="font-[family-name:var(--font-mono)] text-sm text-[var(--text-secondary)] opacity-60">
-          click to look around
-        </p>
-      </div>
+      {/* Click to start prompt - desktop only */}
+      {!isMobile && (
+        <div className="absolute left-1/2 top-[35%] -translate-x-1/2 text-center">
+          <p className="font-[family-name:var(--font-mono)] text-sm text-[var(--text-secondary)] opacity-60">
+            click to look around
+          </p>
+        </div>
+      )}
 
-      {/* Interaction prompt */}
-      {nearTerminal && (
+      {/* Interaction prompt - desktop only (mobile has its own button) */}
+      {!isMobile && nearTerminal && (
         <div className="absolute bottom-24 left-1/2 -translate-x-1/2 text-center">
           <div className="game-interact-prompt rounded border border-[var(--accent)] bg-[var(--bg-card)] px-4 py-2">
             <p className="font-[family-name:var(--font-mono)] text-sm text-[var(--accent)]">
@@ -56,11 +61,23 @@ export function HUD({ nearTerminal, isPanelOpen }: HUDProps) {
         </div>
       )}
 
+      {/* Mobile interaction prompt - shown above touch controls */}
+      {isMobile && nearTerminal && (
+        <div className="absolute bottom-36 left-1/2 -translate-x-1/2 text-center">
+          <div className="rounded border border-[var(--accent)] bg-[var(--bg-card)] px-3 py-1.5">
+            <p className="font-[family-name:var(--font-mono)] text-xs text-[var(--accent)]">
+              {"// "}
+              {TERMINAL_LABELS[nearTerminal]}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Controls hint */}
       <div
         className={`absolute bottom-6 left-6 transition-opacity duration-500 ${
           showControls ? "opacity-100" : "opacity-0 hover:opacity-100"
-        }`}
+        } ${isMobile ? "hidden" : ""}`}
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
       >
@@ -79,6 +96,24 @@ export function HUD({ nearTerminal, isPanelOpen }: HUDProps) {
           </p>
         </div>
       </div>
+
+      {/* Mobile hint - shown initially */}
+      {isMobile && (
+        <div
+          className={`absolute bottom-6 right-6 transition-opacity duration-500 ${
+            showControls ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <div className="space-y-1 rounded border border-[var(--border)] bg-[var(--bg-card)] p-2.5">
+            <p className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--text-secondary)]">
+              <span className="text-[var(--accent)]">LEFT</span> joystick: move
+            </p>
+            <p className="font-[family-name:var(--font-mono)] text-[10px] text-[var(--text-secondary)]">
+              <span className="text-[var(--accent)]">RIGHT</span> swipe: look
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Classic portfolio link */}
       <div className="absolute right-6 top-6 pointer-events-auto">

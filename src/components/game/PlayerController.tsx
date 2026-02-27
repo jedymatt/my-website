@@ -6,14 +6,21 @@ import * as THREE from "three";
 
 const MOVE_SPEED = 5;
 const MOUSE_SENSITIVITY = 0.002;
+const TOUCH_LOOK_SENSITIVITY = 0.004;
 const BOUNDARY = 30;
 const PLAYER_HEIGHT = 1.6;
 
 interface PlayerControllerProps {
   isPanelOpen: boolean;
+  touchMoveRef: React.RefObject<{ x: number; y: number }>;
+  touchLookRef: React.RefObject<{ dx: number; dy: number }>;
 }
 
-export function PlayerController({ isPanelOpen }: PlayerControllerProps) {
+export function PlayerController({
+  isPanelOpen,
+  touchMoveRef,
+  touchLookRef,
+}: PlayerControllerProps) {
   const { camera, gl } = useThree();
   const keysRef = useRef<Set<string>>(new Set());
   const eulerRef = useRef(new THREE.Euler(0, 0, 0, "YXZ"));
@@ -22,7 +29,7 @@ export function PlayerController({ isPanelOpen }: PlayerControllerProps) {
   const isLockedRef = useRef(false);
 
   const requestLock = useCallback(() => {
-    if (!isPanelOpen) {
+    if (!isPanelOpen && "requestPointerLock" in gl.domElement) {
       gl.domElement.requestPointerLock();
     }
   }, [gl, isPanelOpen]);
@@ -96,12 +103,19 @@ export function PlayerController({ isPanelOpen }: PlayerControllerProps) {
     velocity.x *= 0.85;
     velocity.z *= 0.85;
 
-    // Get movement direction
+    // Get movement direction from keyboard
     direction.set(0, 0, 0);
     if (keys.has("KeyW") || keys.has("ArrowUp")) direction.z -= 1;
     if (keys.has("KeyS") || keys.has("ArrowDown")) direction.z += 1;
     if (keys.has("KeyA") || keys.has("ArrowLeft")) direction.x -= 1;
     if (keys.has("KeyD") || keys.has("ArrowRight")) direction.x += 1;
+
+    // Apply touch joystick input
+    const touchMove = touchMoveRef.current;
+    if (touchMove && (touchMove.x !== 0 || touchMove.y !== 0)) {
+      direction.x += touchMove.x;
+      direction.z += touchMove.y;
+    }
 
     if (direction.length() > 0) {
       direction.normalize();
@@ -122,6 +136,21 @@ export function PlayerController({ isPanelOpen }: PlayerControllerProps) {
           .multiplyScalar(-direction.z * MOVE_SPEED * delta)
           .add(right.multiplyScalar(direction.x * MOVE_SPEED * delta))
       );
+    }
+
+    // Apply touch look input
+    const touchLook = touchLookRef.current;
+    if (touchLook && (touchLook.dx !== 0 || touchLook.dy !== 0)) {
+      eulerRef.current.setFromQuaternion(camera.quaternion);
+      eulerRef.current.y -= touchLook.dx * TOUCH_LOOK_SENSITIVITY;
+      eulerRef.current.x -= touchLook.dy * TOUCH_LOOK_SENSITIVITY;
+      eulerRef.current.x = Math.max(
+        -Math.PI / 2.5,
+        Math.min(Math.PI / 2.5, eulerRef.current.x)
+      );
+      camera.quaternion.setFromEuler(eulerRef.current);
+      touchLook.dx = 0;
+      touchLook.dy = 0;
     }
 
     camera.position.add(velocity);

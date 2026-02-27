@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { CyberpunkWorld } from "./CyberpunkWorld";
 import { PlayerController } from "./PlayerController";
 import { InteractiveTerminal, TerminalId } from "./InteractiveTerminal";
 import { HUD } from "./HUD";
 import { InfoPanel } from "./InfoPanel";
+import { TouchControls } from "./TouchControls";
 import type { GitHubStats } from "@/lib/types";
 
 interface GameSceneProps {
@@ -29,6 +30,18 @@ const TERMINALS: {
 export default function GameScene({ stats }: GameSceneProps) {
   const [nearTerminal, setNearTerminal] = useState<TerminalId | null>(null);
   const [openPanel, setOpenPanel] = useState<TerminalId | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const touchMoveRef = useRef({ x: 0, y: 0 });
+  const touchLookRef = useRef({ dx: 0, dy: 0 });
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile("ontouchstart" in window && window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleProximity = useCallback((id: TerminalId | null) => {
     setNearTerminal(id);
@@ -44,6 +57,17 @@ export default function GameScene({ stats }: GameSceneProps) {
     setOpenPanel(null);
   }, []);
 
+  const handleTouchMove = useCallback((x: number, y: number) => {
+    touchMoveRef.current = { x, y };
+  }, []);
+
+  const handleTouchLook = useCallback((dx: number, dy: number) => {
+    touchLookRef.current = {
+      dx: touchLookRef.current.dx + dx,
+      dy: touchLookRef.current.dy + dy,
+    };
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.code === "KeyE" && nearTerminal && !openPanel) {
@@ -55,7 +79,7 @@ export default function GameScene({ stats }: GameSceneProps) {
   }, [nearTerminal, openPanel, handleInteract]);
 
   return (
-    <div className="fixed inset-0">
+    <div className="fixed inset-0 touch-none">
       <Canvas
         camera={{
           fov: 75,
@@ -67,7 +91,11 @@ export default function GameScene({ stats }: GameSceneProps) {
         style={{ background: "#0a0a0c" }}
       >
         <CyberpunkWorld />
-        <PlayerController isPanelOpen={openPanel !== null} />
+        <PlayerController
+          isPanelOpen={openPanel !== null}
+          touchMoveRef={touchMoveRef}
+          touchLookRef={touchLookRef}
+        />
         {TERMINALS.map((t) => (
           <InteractiveTerminal
             key={t.id}
@@ -81,7 +109,21 @@ export default function GameScene({ stats }: GameSceneProps) {
         ))}
       </Canvas>
 
-      <HUD nearTerminal={nearTerminal} isPanelOpen={openPanel !== null} />
+      <HUD
+        nearTerminal={nearTerminal}
+        isPanelOpen={openPanel !== null}
+        isMobile={isMobile}
+      />
+
+      {isMobile && (
+        <TouchControls
+          nearTerminal={nearTerminal}
+          onInteract={handleInteract}
+          onMoveInput={handleTouchMove}
+          onLookInput={handleTouchLook}
+          isPanelOpen={openPanel !== null}
+        />
+      )}
 
       {openPanel && (
         <InfoPanel
