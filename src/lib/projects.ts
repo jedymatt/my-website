@@ -26,12 +26,12 @@ export const featuredProjects: FeaturedProject[] = [
     tags: ["Vue 3", "JavaScript", "Mini Game"],
   },
   {
-    slug: "remindmebills",
-    title: "RemindMeBills",
+    slug: "kadasahod",
+    title: "Kada Sahod",
     description:
-      "A bill reminder application that helps users track and manage their upcoming payments and due dates.",
-    repoName: "remindmebills",
-    liveUrl: "https://remindmebills.com",
+      "A bill tracker that lines up bills, subscriptions and BNPL installments against your pay cycle, so you know what's due before your next sahod lands.",
+    repoName: "kadasahod",
+    liveUrl: "https://kadasahod.com",
     tags: ["TypeScript", "Next.js", "Web App"],
   },
 ];
